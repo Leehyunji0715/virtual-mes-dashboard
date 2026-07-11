@@ -8,4 +8,5 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     List<Alarm> findByLevelOrderByCreatedAtDesc(AlarmLevel level);
     List<Alarm> findByIsResolvedOrderByCreatedAtDesc(boolean isResolved);
     List<Alarm> findByLevelAndIsResolvedOrderByCreatedAtDesc(AlarmLevel level, boolean isResolved);
+    long countByIsResolved(boolean isResolved);
 }
