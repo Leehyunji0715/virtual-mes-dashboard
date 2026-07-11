@@ -1,6 +1,8 @@
 package com.virtaul.mes.dashboard.equipment;
 
 import org.springframework.stereotype.Service;
+
+import com.virtaul.mes.dashboard.common.ResourceNotFoundException;
 import com.virtaul.mes.dashboard.equipment.dto.EquipmentResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +19,7 @@ public class EquipmentService {
 
     public EquipmentResponse findById(Long id) {
         Equipment equipment = equipmentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("설비를 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("설비를 찾을 수 없습니다: " + id));
         return EquipmentResponse.from(equipment);
     }
 }
