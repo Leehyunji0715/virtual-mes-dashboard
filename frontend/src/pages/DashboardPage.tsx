@@ -9,6 +9,7 @@ import type {
 } from '../types/mes';
 import KpiCards from '../components/dashboard/KpiCards';
 import AlarmList from '../components/dashboard/AlarmList';
+import ProductionChart from '../components/dashboard/ProductionChart';
 import EquipmentTable from '../components/equipment/EquipmentTable';
 
 interface DashboardPageProps {
@@ -59,12 +60,13 @@ export default function DashboardPage({ equipmentUpdate, newAlarm }: DashboardPa
       <KpiCards kpi={kpi} />
 
       <div
-        style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16, alignItems: 'start' }}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}
       >
-        {/* TODO: ProductionChart (ECharts) 자리 */}
+        <ProductionChart />
         <EquipmentTable equipmentList={equipmentList} />
-        <AlarmList alarms={alarms} />
       </div>
+
+      <AlarmList alarms={alarms} />
     </div>
   );
 }
