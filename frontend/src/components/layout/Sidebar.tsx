@@ -1,9 +1,16 @@
-const NAV_ITEMS = [
-  { label: '대시보드', icon: '📊', active: true },
-  { label: '설비 관리', icon: '⚙️', active: false },
+export type Page = 'dashboard' | 'equipment';
+
+interface SidebarProps {
+  active: Page;
+  onNavigate: (page: Page) => void;
+}
+
+const NAV_ITEMS: { key: Page; label: string; icon: string }[] = [
+  { key: 'dashboard', label: '대시보드', icon: '📊' },
+  { key: 'equipment', label: '설비 관리', icon: '⚙️' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ active, onNavigate }: SidebarProps) {
   return (
     <aside
       style={{
@@ -16,8 +23,9 @@ export default function Sidebar() {
     >
       <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         {NAV_ITEMS.map((item) => (
-          <div
-            key={item.label}
+          <button
+            key={item.key}
+            onClick={() => onNavigate(item.key)}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -25,15 +33,19 @@ export default function Sidebar() {
               padding: '10px 12px',
               borderRadius: 8,
               fontSize: 14,
-              fontWeight: item.active ? 600 : 500,
-              color: item.active ? 'var(--text-primary)' : 'var(--text-secondary)',
-              background: item.active ? 'var(--surface-page)' : 'transparent',
-              cursor: item.active ? 'default' : 'not-allowed',
+              fontWeight: active === item.key ? 600 : 500,
+              color: active === item.key ? 'var(--text-primary)' : 'var(--text-secondary)',
+              background: active === item.key ? 'var(--surface-page)' : 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              textAlign: 'left',
+              width: '100%',
+              fontFamily: 'inherit',
             }}
           >
             <span aria-hidden>{item.icon}</span>
             {item.label}
-          </div>
+          </button>
         ))}
       </nav>
     </aside>

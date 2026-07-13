@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getEquipmentList, getAlarms, getDashboardKpi } from '../api/mesApi';
+import { getEquipmentList, getAlarms, getDashboardKpi, resolveAlarm } from '../api/mesApi';
 import type {
   Equipment,
   Alarm,
@@ -55,18 +55,22 @@ export default function DashboardPage({ equipmentUpdate, newAlarm }: DashboardPa
     setAlarms((prev) => [alarm, ...prev]);
   }, [newAlarm]);
 
+  const handleResolve = (id: number) => {
+    resolveAlarm(id).then(() => {
+      setAlarms((prev) => prev.map((a) => (a.id === id ? { ...a, isResolved: true } : a)));
+    });
+  };
+
   return (
     <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
       <KpiCards kpi={kpi} />
 
-      <div
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}
-      >
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'stretch' }}>
         <ProductionChart />
         <EquipmentTable equipmentList={equipmentList} />
       </div>
 
-      <AlarmList alarms={alarms} />
+      <AlarmList alarms={alarms} onResolve={handleResolve} />
     </div>
   );
 }
