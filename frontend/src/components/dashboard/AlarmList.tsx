@@ -2,6 +2,8 @@ import type { Alarm, AlarmLevel } from '../../types/mes';
 
 interface AlarmListProps {
   alarms: Alarm[];
+  fillHeight?: boolean;
+  onResolve?: (id: number) => void;
 }
 
 const LEVEL_META: Record<AlarmLevel, { label: string; color: string }> = {
@@ -29,7 +31,7 @@ function LevelBadge({ level }: { level: AlarmLevel }) {
   );
 }
 
-export default function AlarmList({ alarms }: AlarmListProps) {
+export default function AlarmList({ alarms, fillHeight = false, onResolve }: AlarmListProps) {
   const sorted = [...alarms].sort((a, b) => {
     if (a.isResolved !== b.isResolved) return a.isResolved ? 1 : -1;
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -42,6 +44,11 @@ export default function AlarmList({ alarms }: AlarmListProps) {
         border: '1px solid var(--border)',
         borderRadius: 12,
         padding: 16,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        height: fillHeight ? '100%' : undefined,
+        maxHeight: fillHeight ? undefined : 320,
       }}
     >
       <h2
@@ -54,7 +61,8 @@ export default function AlarmList({ alarms }: AlarmListProps) {
           display: 'flex',
           flexDirection: 'column',
           gap: 8,
-          maxHeight: 320,
+          flex: 1,
+          minHeight: 0,
           overflowY: 'auto',
         }}
       >
@@ -81,6 +89,24 @@ export default function AlarmList({ alarms }: AlarmListProps) {
                 {alarm.equipmentName} · {new Date(alarm.createdAt).toLocaleString('ko-KR')}
               </div>
             </div>
+            {!alarm.isResolved && onResolve && (
+              <button
+                onClick={() => onResolve(alarm.id)}
+                style={{
+                  flexShrink: 0,
+                  fontSize: 12,
+                  padding: '4px 10px',
+                  borderRadius: 6,
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface-card)',
+                  color: 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                해결 처리
+              </button>
+            )}
           </div>
         ))}
       </div>

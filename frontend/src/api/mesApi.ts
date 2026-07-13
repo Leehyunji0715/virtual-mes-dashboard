@@ -24,4 +24,7 @@ export const getAlarms = (level?: AlarmLevelParam, resolved?: boolean) =>
 export const getDashboardKpi = () =>
   client.get<ApiResponse<DashboardKpi>>('/dashboard/kpi').then((res) => res.data.data);
 
+export const resolveAlarm = (id: number) =>
+  client.patch<ApiResponse<Alarm>>(`/alarms/${id}/resolve`).then((res) => res.data.data);
+
 type AlarmLevelParam = 'INFO' | 'WARNING' | 'CRITICAL';
