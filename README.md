@@ -90,6 +90,9 @@ docker compose up --build -d
 **백엔드**
 ```bash
 # PostgreSQL이 로컬에 떠있어야 함 (mes 데이터베이스)
+# 본인 Postgres 계정 정보와 다르면 환경변수로 덮어쓸 것
+export SPRING_DATASOURCE_USERNAME=본인계정
+export SPRING_DATASOURCE_PASSWORD=본인비밀번호
 ./gradlew bootRun
 ```
 
