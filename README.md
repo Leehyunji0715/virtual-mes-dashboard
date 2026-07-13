@@ -115,6 +115,12 @@ npm run dev
 
 백엔드 개발 직무를 준비하며, 실시간 모니터링 시스템에서 자주 쓰이는 핵심 개념(REST API 설계, WebSocket 기반 실시간 통신, 도메인 모델링)을 직접 구현해보기 위해 만든 프로젝트입니다. 실제 설비 센서 데이터 대신 시뮬레이터로 이벤트를 발생시켰지만, WebSocket을 통해 상태 변화를 실시간으로 전달하는 통신 구조 자체는 동일한 방식으로 구현했습니다.
 
+## 향후 개선 사항
+- Spring Security 기반 인증/인가 적용 (api 접근 권한 설정)
+- CORS 허용 도메인 제한 (운영 환경)
+- 환경별 프로파일 분리 (dev/prod)
+- PostgreSQL 포트 외부 노출 제거 (운영 환경)
+
 ## Author
 - 블로그: https://www.bearlee0715.com
 - GitHub: https://github.com/Leehyunji0715
