@@ -1,0 +1,103 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.bounded {
+  max-height: 360px;
+}
+
+.fill {
+  height: 100%;
+}
+
+.summary {
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--weight-bold);
+  border-radius: var(--radius-full);
+  padding: 2px 9px;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.summaryUrgent {
+  background: var(--status-critical-bg);
+  color: var(--status-critical-text);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.empty {
+  font-size: var(--text-body);
+  color: var(--text-muted);
+  padding: var(--space-4) 0;
+}
+
+/* ---------- 알람 한 건 ---------- */
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border-left: 3px solid var(--row-accent);
+  transition: opacity var(--transition-base);
+}
+
+.row.resolved {
+  background: transparent;
+  border-left-color: transparent;
+  opacity: 0.5;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.message {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--text-primary);
+}
+
+.resolved .message {
+  text-decoration: line-through;
+}
+
+.meta {
+  margin-top: 2px;
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  color: var(--text-muted);
+}
+
+.resolveButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-label);
+  font-weight: var(--weight-bold);
+  font-family: inherit;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  color: var(--primary-text);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}

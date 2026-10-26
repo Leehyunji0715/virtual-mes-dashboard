@@ -1,112 +1,108 @@
 import type { DashboardKpi } from '../../types/mes';
+import Card from '../ui/Card';
+import Metric from '../ui/Metric';
+import StatusChip from '../ui/StatusChip';
+import Icon, { type IconName } from '../common/Icon';
+import {
+  operationRateTone,
+  defectRateTone,
+  activeAlarmTone,
+  TONE_LABEL,
+  type Tone,
+} from '../ui/status';
+import EquipmentMixBar from './EquipmentMixBar';
+import styles from './KpiCards.module.css';
 
-interface KpiCardsProps {
-  kpi: DashboardKpi | null;
-}
-
-type StatusLevel = 'good' | 'warning' | 'critical';
-
-const STATUS_COLOR: Record<StatusLevel, string> = {
-  good: 'var(--status-good)',
-  warning: 'var(--status-warning)',
-  critical: 'var(--status-critical)',
-};
-
-const STATUS_LABEL: Record<StatusLevel, string> = {
-  good: '정상',
-  warning: '주의',
-  critical: '위험',
-};
-
-function operationRateStatus(rate: number): StatusLevel {
-  if (rate >= 80) return 'good';
-  if (rate >= 60) return 'warning';
-  return 'critical';
-}
-
-function defectRateStatus(rate: number): StatusLevel {
-  if (rate <= 2) return 'good';
-  if (rate <= 5) return 'warning';
-  return 'critical';
-}
-
-function alarmStatus(count: number): StatusLevel {
-  if (count === 0) return 'good';
-  if (count <= 3) return 'warning';
-  return 'critical';
-}
-
-function Card({
-  title,
+/** 보조 KPI 한 장 */
+function StatCard({
+  label,
   value,
   unit,
-  status,
+  icon,
+  tone,
 }: {
-  title: string;
+  label: string;
   value: string;
-  unit?: string;
-  status?: StatusLevel;
+  unit: string;
+  icon: IconName;
+  tone?: Tone;
 }) {
   return (
-    <div
-      style={{
-        background: 'var(--surface-card)',
-        border: '1px solid var(--border)',
-        borderRadius: 12,
-        padding: '16px 20px',
-        flex: 1,
-        minWidth: 160,
-      }}
-    >
-      <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 8 }}>{title}</div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-        <span style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>{value}</span>
-        {unit && <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{unit}</span>}
+    <Card className={styles.stat}>
+      <div className={styles.statBody}>
+        <Metric
+          label={label}
+          value={value}
+          unit={unit}
+          trailing={tone && <StatusChip tone={tone} label={TONE_LABEL[tone]} />}
+        />
       </div>
-      {status && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            marginTop: 8,
-            fontSize: 12,
-            color: STATUS_COLOR[status],
-          }}
-        >
-          <span aria-hidden>●</span>
-          {STATUS_LABEL[status]}
-        </div>
-      )}
-    </div>
+      <div className={`${styles.iconBox} ${styles.iconBoxMuted}`}>
+        <Icon name={icon} size={20} />
+      </div>
+    </Card>
   );
 }
 
-export default function KpiCards({ kpi }: KpiCardsProps) {
+/** 가동률 — 한 화면의 주역. 설비 구성까지 함께 보여준다. */
+function OperationRateCard({ kpi }: { kpi: DashboardKpi }) {
+  const { running, stop, maintenance } = kpi.equipmentSummary;
+  const total = running + stop + maintenance;
+  const tone = operationRateTone(kpi.operationRate);
+
+  return (
+    <Card className={styles.primary}>
+      <div className={styles.primaryHead}>
+        <div>
+          <div className={styles.overline}>설비 가동률</div>
+          <div className={styles.caption}>
+            설비 {total}대 중 {running}대 가동
+          </div>
+        </div>
+        <div className={`${styles.iconBox} ${styles.iconBoxPrimary}`}>
+          <Icon name="gauge" size={22} />
+        </div>
+      </div>
+
+      <Metric
+        value={kpi.operationRate.toFixed(1)}
+        unit="%"
+        size="lead"
+        trailing={<StatusChip tone={tone} label={TONE_LABEL[tone]} />}
+      />
+
+      <EquipmentMixBar summary={kpi.equipmentSummary} />
+    </Card>
+  );
+}
+
+export default function KpiCards({ kpi }: { kpi: DashboardKpi | null }) {
   if (!kpi) {
-    return <div style={{ color: 'var(--text-muted)', fontSize: 14 }}>KPI 불러오는 중...</div>;
+    return <Card className={styles.loading}>KPI 불러오는 중…</Card>;
   }
 
   return (
-    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-      <Card
-        title="가동률"
-        value={kpi.operationRate.toFixed(1)}
-        unit="%"
-        status={operationRateStatus(kpi.operationRate)}
+    <div className={styles.grid}>
+      <OperationRateCard kpi={kpi} />
+      <StatCard
+        label="오늘 생산량"
+        value={kpi.totalProduction.toLocaleString()}
+        unit="대"
+        icon="output"
       />
-      <Card title="오늘 생산량" value={kpi.totalProduction.toLocaleString()} unit="대" />
-      <Card
-        title="불량률"
+      <StatCard
+        label="불량률"
         value={kpi.defectRate.toFixed(1)}
         unit="%"
-        status={defectRateStatus(kpi.defectRate)}
+        icon="defect"
+        tone={defectRateTone(kpi.defectRate)}
       />
-      <Card
-        title="미해결 알람"
+      <StatCard
+        label="미해결 알람"
         value={String(kpi.activeAlarms)}
         unit="건"
-        status={alarmStatus(kpi.activeAlarms)}
+        icon="alarm"
+        tone={activeAlarmTone(kpi.activeAlarms)}
       />
     </div>
   );

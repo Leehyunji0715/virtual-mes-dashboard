@@ -1,0 +1,25 @@
+.mark {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--mark-fill);
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.square {
+  border-radius: 2px;
+}
+
+/* 삼각형은 테두리로 그리므로 크기 규칙이 다르다 */
+.triangle {
+  width: 0;
+  height: 0;
+  background: none;
+  border-left: 4.5px solid transparent;
+  border-right: 4.5px solid transparent;
+  border-bottom: 8px solid var(--mark-fill);
+}

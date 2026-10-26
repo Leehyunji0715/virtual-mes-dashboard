@@ -1,0 +1,42 @@
+.card {
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-card);
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.headerBaseline {
+  align-items: baseline;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-heading);
+  line-height: var(--text-heading-lh);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin-top: 2px;
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  color: var(--text-muted);
+  font-weight: var(--weight-normal);
+}

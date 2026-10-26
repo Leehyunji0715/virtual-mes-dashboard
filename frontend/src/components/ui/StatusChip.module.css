@@ -1,0 +1,21 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
+}
+
+/* 알람 레벨처럼 영문 코드를 보여줄 때 */
+.code {
+  padding: 4px 7px;
+  font-size: var(--text-overline);
+  line-height: var(--text-overline-lh);
+  letter-spacing: 0.04em;
+}

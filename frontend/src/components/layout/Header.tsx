@@ -1,45 +1,31 @@
+import StatusMark from '../ui/StatusMark';
+import styles from './Header.module.css';
+
 interface HeaderProps {
   connected: boolean;
+  title: string;
 }
 
-export default function Header({ connected }: HeaderProps) {
+/** WebSocket 연결 상태. 연결 중이면 표식이 맥박처럼 깜빡인다. */
+function ConnectionStatus({ connected }: { connected: boolean }) {
+  const className = connected ? `${styles.connection} ${styles.connected}` : styles.connection;
+
   return (
-    <header
-      style={{
-        height: 56,
-        flexShrink: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 20px',
-        background: 'var(--surface-card)',
-        borderBottom: '1px solid var(--border)',
-      }}
-    >
-      <h1 style={{ fontSize: 16, fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
-        MES 설비 모니터링 대시보드
-      </h1>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          fontSize: 13,
-          color: 'var(--text-secondary)',
-        }}
-      >
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            background: connected ? 'var(--status-good)' : 'var(--text-muted)',
-            display: 'inline-block',
-          }}
-          aria-hidden
-        />
-        {connected ? '실시간 연결됨' : '연결 대기중'}
+    <div className={className} role="status">
+      {connected ? <StatusMark tone="good" pulse /> : <span className={styles.idleDot} aria-hidden />}
+      {connected ? '실시간 연결됨' : '연결 대기중'}
+    </div>
+  );
+}
+
+export default function Header({ connected, title }: HeaderProps) {
+  return (
+    <header className={styles.header}>
+      <div>
+        <div className={styles.breadcrumb}>MES / 모니터링</div>
+        <h1 className={styles.title}>{title}</h1>
       </div>
+      <ConnectionStatus connected={connected} />
     </header>
   );
 }

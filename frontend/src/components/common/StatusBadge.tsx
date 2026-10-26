@@ -1,35 +1,9 @@
 import type { EquipmentStatus } from '../../types/mes';
+import StatusChip from '../ui/StatusChip';
+import { EQUIPMENT_STATUS, isLive } from './statusMeta';
 
-export const EQUIPMENT_STATUS_META: Record<EquipmentStatus, { label: string; color: string }> = {
-  RUNNING: { label: 'RUNNING', color: 'var(--status-good)' },
-  MAINTENANCE: { label: 'MAINTENANCE', color: 'var(--status-warning)' },
-  STOP: { label: 'STOP', color: 'var(--status-critical)' },
-};
-
+/** 설비 상태 배지. 가동 중이면 표식이 깜빡인다. */
 export default function StatusBadge({ status }: { status: EquipmentStatus }) {
-  const meta = EQUIPMENT_STATUS_META[status];
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 6,
-        fontSize: 12,
-        fontWeight: 600,
-        color: meta.color,
-      }}
-    >
-      <span
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          background: meta.color,
-          display: 'inline-block',
-        }}
-        aria-hidden
-      />
-      {meta.label}
-    </span>
-  );
+  const { tone, label } = EQUIPMENT_STATUS[status];
+  return <StatusChip tone={tone} label={label} pulse={isLive(status)} />;
 }

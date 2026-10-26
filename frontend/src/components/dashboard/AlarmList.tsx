@@ -1,115 +1,74 @@
-import type { Alarm, AlarmLevel } from '../../types/mes';
+import { useMemo } from 'react';
+import type { Alarm } from '../../types/mes';
+import Card from '../ui/Card';
+import { alarmLevelRank } from '../common/statusMeta';
+import AlarmRow from './AlarmRow';
+import styles from './AlarmList.module.css';
 
 interface AlarmListProps {
-  alarms: Alarm[];
+  alarms: ReadonlyArray<Alarm>;
+  /** 부모 높이를 채운다 (상세 페이지 등) */
   fillHeight?: boolean;
   onResolve?: (id: number) => void;
+  /** 실시간으로 막 도착한 알람 id */
+  highlightIds?: ReadonlySet<number>;
 }
 
-const LEVEL_META: Record<AlarmLevel, { label: string; color: string }> = {
-  INFO: { label: 'INFO', color: 'var(--status-info)' },
-  WARNING: { label: 'WARNING', color: 'var(--status-warning)' },
-  CRITICAL: { label: 'CRITICAL', color: 'var(--status-critical)' },
-};
+/** 미해결 우선 → 심각도 → 최신순 */
+function sortAlarms(alarms: ReadonlyArray<Alarm>): Alarm[] {
+  return [...alarms].sort((a, b) => {
+    if (a.isResolved !== b.isResolved) return a.isResolved ? 1 : -1;
+    if (!a.isResolved) {
+      const rank = alarmLevelRank(a.level) - alarmLevelRank(b.level);
+      if (rank !== 0) return rank;
+    }
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+}
 
-function LevelBadge({ level }: { level: AlarmLevel }) {
-  const meta = LEVEL_META[level];
+function Summary({ alarms }: { alarms: ReadonlyArray<Alarm> }) {
+  const unresolved = alarms.filter((a) => !a.isResolved);
+  if (unresolved.length === 0) return null;
+
+  const critical = unresolved.filter((a) => a.level === 'CRITICAL').length;
+  const className = critical > 0 ? `${styles.summary} ${styles.summaryUrgent}` : styles.summary;
+
   return (
-    <span
-      style={{
-        fontSize: 11,
-        fontWeight: 700,
-        color: meta.color,
-        border: `1px solid ${meta.color}`,
-        borderRadius: 4,
-        padding: '2px 6px',
-        flexShrink: 0,
-      }}
-    >
-      {meta.label}
+    <span className={className}>
+      미해결 <span className="tabular">{unresolved.length}</span>
+      {critical > 0 && (
+        <>
+          {' · CRITICAL '}
+          <span className="tabular">{critical}</span>
+        </>
+      )}
     </span>
   );
 }
 
-export default function AlarmList({ alarms, fillHeight = false, onResolve }: AlarmListProps) {
-  const sorted = [...alarms].sort((a, b) => {
-    if (a.isResolved !== b.isResolved) return a.isResolved ? 1 : -1;
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+export default function AlarmList({
+  alarms,
+  fillHeight = false,
+  onResolve,
+  highlightIds,
+}: AlarmListProps) {
+  const sorted = useMemo(() => sortAlarms(alarms), [alarms]);
+
+  const className = [styles.card, fillHeight ? styles.fill : styles.bounded].join(' ');
 
   return (
-    <div
-      style={{
-        background: 'var(--surface-card)',
-        border: '1px solid var(--border)',
-        borderRadius: 12,
-        padding: 16,
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        height: fillHeight ? '100%' : undefined,
-        maxHeight: fillHeight ? undefined : 320,
-      }}
-    >
-      <h2
-        style={{ fontSize: 14, fontWeight: 600, margin: '0 0 12px', color: 'var(--text-primary)' }}
-      >
-        알람
-      </h2>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
-          flex: 1,
-          minHeight: 0,
-          overflowY: 'auto',
-        }}
-      >
-        {sorted.length === 0 && (
-          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>알람이 없습니다.</div>
-        )}
+    <Card title="알람" badge={<Summary alarms={alarms} />} className={className}>
+      <div className={styles.list}>
+        {sorted.length === 0 && <div className={styles.empty}>알람이 없습니다.</div>}
         {sorted.map((alarm) => (
-          <div
+          <AlarmRow
             key={alarm.id}
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 10,
-              padding: '8px 10px',
-              borderRadius: 8,
-              background: alarm.isResolved ? 'transparent' : 'var(--surface-page)',
-              opacity: alarm.isResolved ? 0.55 : 1,
-            }}
-          >
-            <LevelBadge level={alarm.level} />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, color: 'var(--text-primary)' }}>{alarm.message}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
-                {alarm.equipmentName} · {new Date(alarm.createdAt).toLocaleString('ko-KR')}
-              </div>
-            </div>
-            {!alarm.isResolved && onResolve && (
-              <button
-                onClick={() => onResolve(alarm.id)}
-                style={{
-                  flexShrink: 0,
-                  fontSize: 12,
-                  padding: '4px 10px',
-                  borderRadius: 6,
-                  border: '1px solid var(--border)',
-                  background: 'var(--surface-card)',
-                  color: 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                }}
-              >
-                해결 처리
-              </button>
-            )}
-          </div>
+            alarm={alarm}
+            isNew={highlightIds?.has(alarm.id)}
+            onResolve={onResolve}
+          />
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

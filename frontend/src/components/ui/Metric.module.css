@@ -1,0 +1,56 @@
+.label {
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--weight-bold);
+  color: var(--text-muted);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+/* 라벨을 수치 왼쪽에. 바깥 flex 의 baseline 정렬이 수치 기준선을 따르도록 같은 줄에 둔다 */
+.inline {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.inline .row {
+  margin-top: 0;
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  font-size: var(--text-stat);
+  line-height: var(--text-stat-lh);
+}
+
+/* 주역 수치 — 한 화면에 하나만 */
+.value.lead {
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+}
+
+.value.toned {
+  color: var(--metric-color);
+}
+
+.unit {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+}
+
+.value.lead + .unit {
+  font-size: var(--text-heading);
+}
+
+.trailing {
+  margin-left: auto;
+}
