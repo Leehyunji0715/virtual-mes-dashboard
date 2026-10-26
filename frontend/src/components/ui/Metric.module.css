@@ -1,0 +1,45 @@
+.label {
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--weight-bold);
+  color: var(--text-muted);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  font-size: var(--text-stat);
+  line-height: var(--text-stat-lh);
+}
+
+/* 주역 수치 — 한 화면에 하나만 */
+.value.lead {
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+}
+
+.value.toned {
+  color: var(--metric-color);
+}
+
+.unit {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+}
+
+.value.lead + .unit {
+  font-size: var(--text-heading);
+}
+
+.trailing {
+  margin-left: auto;
+}

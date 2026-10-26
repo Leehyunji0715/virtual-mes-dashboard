@@ -1,0 +1,17 @@
+/* 목표를 채운 날은 눈에 띄게 — 숫자를 읽지 않아도 보인다 */
+.achieved {
+  font-weight: var(--weight-bold);
+  color: var(--status-good-text);
+}
+
+.hasDefect {
+  color: var(--status-critical-text);
+}
+
+.noDefect {
+  color: var(--text-muted);
+}
+
+.shift {
+  color: var(--text-secondary);
+}

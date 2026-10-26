@@ -1,0 +1,20 @@
+.page {
+  padding: 0 var(--space-6) var(--space-6);
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}

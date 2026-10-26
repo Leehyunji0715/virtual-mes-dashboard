@@ -1,0 +1,56 @@
+.header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background: var(--surface-page);
+}
+
+.breadcrumb {
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  color: var(--text-muted);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-heading);
+  line-height: var(--text-heading-lh);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.connection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  font-weight: var(--weight-bold);
+  background: var(--surface-card);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-card);
+  transition:
+    background var(--transition-base),
+    color var(--transition-base);
+}
+
+.connected {
+  background: var(--status-good-bg);
+  color: var(--status-good-text);
+  box-shadow: none;
+}
+
+/* 연결 대기중 — 상태색이 아니라 중립 회색 */
+.idleDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
