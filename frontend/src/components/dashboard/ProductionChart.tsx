@@ -81,10 +81,7 @@ function buildChartOption(totals: DailyTotals, c: ThemeColors) {
       splitLine: { lineStyle: { color: c.grid } },
       axisLabel: { color: c.muted, fontSize: 11 },
     },
-    series: [
-      bar('목표', totals.targetData, c.target),
-      bar('실적', totals.actualData, c.actual),
-    ],
+    series: [bar('목표', totals.targetData, c.target), bar('실적', totals.actualData, c.actual)],
   };
 }
 
@@ -96,6 +93,7 @@ function AchievementMetric({ percent }: { percent: number }) {
       label="목표 달성"
       value={`${delta >= 0 ? '+' : ''}${delta.toFixed(1)}`}
       unit="%"
+      layout="inline"
       tone={delta >= 0 ? 'good' : undefined}
     />
   );
@@ -120,9 +118,7 @@ export default function ProductionChart() {
       subtitle="최근 7일 · 목표 대비"
       alignBaseline
       action={
-        totals.achievedPercent !== null && (
-          <AchievementMetric percent={totals.achievedPercent} />
-        )
+        totals.achievedPercent !== null && <AchievementMetric percent={totals.achievedPercent} />
       }
     >
       <EChartsReact option={option} style={{ height: 300 }} notMerge />

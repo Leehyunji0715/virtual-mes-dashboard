@@ -10,6 +10,8 @@ interface MetricProps {
   unit?: string;
   /** 'lead' 는 한 화면의 주역 수치. 여러 개 쓰면 위계가 사라진다. */
   size?: 'default' | 'lead';
+  /** 'inline' 은 라벨을 수치 왼쪽에 둔다. 카드 헤더처럼 제목과 기준선을 맞춰야 할 때 쓴다. */
+  layout?: 'stacked' | 'inline';
   /** 값에 상태색을 입힌다 (임계값 초과 등) */
   tone?: Tone;
   /** 값 우측 끝에 붙는 요소 (상태 배지 등) */
@@ -22,6 +24,7 @@ export default function Metric({
   value,
   unit,
   size = 'default',
+  layout = 'stacked',
   tone,
   trailing,
 }: MetricProps) {
@@ -30,7 +33,7 @@ export default function Metric({
     .join(' ');
 
   return (
-    <div>
+    <div className={layout === 'inline' ? styles.inline : undefined}>
       {label && <div className={styles.label}>{label}</div>}
       <div className={styles.row}>
         <span
