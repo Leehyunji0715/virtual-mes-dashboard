@@ -10,6 +10,9 @@
 **설비 관리 (마스터-디테일)**
 ![설비 관리](docs/equipment.png)
 
+**다크 테마 (OS 설정 `prefers-color-scheme` 연동)**
+![대시보드 다크 테마](docs/dashboard-dark.png)
+
 **실시간 동작 (알람 해결 처리, 실시간 상태 반영, 페이지 전환, 설비 선택)**
 ![데모](docs/demo.gif)
 
